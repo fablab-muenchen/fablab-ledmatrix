@@ -13,3 +13,13 @@ def get_gradient_3d(width, height, start_list, stop_list, is_horizontal_list):
         result[:, :, i] = get_gradient_2d(start, stop, width, height, is_horizontal)
 
     return result
+    
+    
+'''
+Converts web colors strings to triplets
+in: #B4FBB8
+out:(180, 251, 184)
+'''
+def color_hex2triplet(hex):
+  h = hex.lstrip('#')
+  return tuple(int(h[i:i+2], 16) for i in (0, 2, 4))
