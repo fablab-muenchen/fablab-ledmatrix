@@ -17,40 +17,79 @@ class ProviderMVV(Provider):
         self.font = ImageFont.truetype("fonts/Berkelium1541.ttf", size=6)
 
     def displayContent(self, t) -> None:
-        image = self.createImage()
+        image = self.createImage1()
+        self.matrix.displayImage(image)
+        time.sleep(t)
+        image = self.createImage2()
         self.matrix.displayImage(image)
         time.sleep(t)
         
-    def createImage(self) -> Image:
+    def createImage1(self) -> Image:
+        image = self.createImageFor('de:09162:1150', "ABFAHRTEN Heimeranplatz", 
+          lambda x: x['departureTimeMinutes'] >= 5 and
+                    ( x['label'].startswith("U") or x['label'].startswith("S")))
+        return image
+        
+    def createImage2(self) -> Image:
+        image = self.createImageFor('de:09162:8', "ABFAHRTEN Donnersb.Brücke",
+          lambda x: x['departureTimeMinutes'] >= 5 and x['label'].startswith("S"))
+        return image
+
+    def createImageFor(self, station, title, labelFilter) -> Image:
         image = Image.new('RGB', self.matrix.getSize(), (0,0,0))
         draw = ImageDraw.Draw(image)
+
+        dep = mvg_api.get_departures(station)
+        dep.sort(key=lambda item: item['departureTimeMinutes'])
+        #print(dep)
         
-        dep = mvg_api.get_departures('de:09162:1150', timeoffset=5)
         ypos = 0;
-        self.text(draw, (0, ypos), "ABFAHRTEN Heimeranplatz",(127,255,255))
+        self.text(draw, (0, ypos), title,(127,255,255))
         ypos = ypos+7
         
-        for item in filter(lambda x: x['label']=="U5" or x['label']=="U4", dep): 
+        for item in filter(lambda x: labelFilter(x), dep): 
             #print(item)         
             color = color_hex2triplet(item['lineBackgroundColor'])
-            self.text(draw, (0, ypos), item['label'], color)
-            txt = "{} {}min".format(
-              item['destination'], 
-              item['departureTimeMinutes']
-              )
-            offset = self.text(draw, (10, ypos), txt)
+            draw.rectangle([0,ypos, 9,ypos+4], fill=color)
+            self.centeredtext(draw, (5, ypos), item['label'])
+            
+            offset = self.text(draw, (11, ypos), item['destination'])
+              
+            self.rightaligntext(draw, (image.width+1, ypos), 
+              "{}min".format(item['departureTimeMinutes']), bg=(0,0,0))
+            
+            # lass ich weg, ist in departureTimeMinutes schon einberechnet
             #if item['delay']>-1:
             #    self.text(draw, (10+offset, ypos), "+{}".format(item['delay']), (255,0,0))
+            
             ypos = ypos+6
             if ypos+5>image.height:
                 break;
         return image
         
+        
     def text(self, draw, pos, text, color=(255,255,255)) -> int:
         pixels = draw.textlength(text, font=self.font)
         draw.text(pos, text, color, font=self.font)
         return int(round(pixels))
+
+    def centeredtext(self, draw, pos, text, color=(255,255,255)) -> None:
+        pixels = draw.textlength(text, font=self.font)
+        (x,y) = pos
+        pos = (round(x-pixels/2+0.5), y)
+        draw.text(pos, text, color, font=self.font)
+
+    def rightaligntext(self, draw, pos, text, color=(255,255,255), bg=None) -> None:
+        pixels = draw.textlength(text, font=self.font)
+        (x,y) = pos
+        pos = (round(x-pixels), y)
+        if bg:
+            draw.rectangle([(x-pixels-1,y), (x,y+6)], fill=bg)
+        draw.text(pos, text, color, font=self.font)
+          
         
     def saveTestImage(self) -> None:
-        image = self.createImage()
-        image.save("mvv.png", "PNG")
+        image = self.createImage1()
+        image.save("mvv1.png", "PNG")
+        image = self.createImage2()
+        image.save("mvv2.png", "PNG")
