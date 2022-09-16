@@ -23,3 +23,7 @@ out:(180, 251, 184)
 def color_hex2triplet(hex):
   h = hex.lstrip('#')
   return tuple(int(h[i:i+2], 16) for i in (0, 2, 4))
+  
+def color_mult(triplet, factor):
+  (a,b,c) = triplet
+  return (int(a*factor), int(b*factor), int(c*factor))

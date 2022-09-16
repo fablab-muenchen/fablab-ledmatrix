@@ -9,12 +9,16 @@ from mss import mss
 from providers import Provider
 
 import mvg_api
-from  utils import color_hex2triplet
+from  utils import color_hex2triplet, color_mult
+
+
 
 class ProviderMVV(Provider):
     def __init__(self, matrix, fps=30) -> None:
         super().__init__(matrix, fps)
         self.font = ImageFont.truetype("fonts/Berkelium1541.ttf", size=6)
+        self.textColor = (150,150,20)
+        self.titleColor = (100,200,200)
 
     def displayContent(self, t) -> None:
         image = self.createImage1()
@@ -44,19 +48,23 @@ class ProviderMVV(Provider):
         #print(dep)
         
         ypos = 0;
-        self.text(draw, (0, ypos), title,(127,255,255))
+        self.text(draw, (0, ypos), title, self.titleColor)
         ypos = ypos+7
         
         for item in filter(lambda x: labelFilter(x), dep): 
             #print(item)         
+            
+            # line
             color = color_hex2triplet(item['lineBackgroundColor'])
+            color = color_mult(color, 0.75)
             draw.rectangle([0,ypos, 9,ypos+4], fill=color)
             self.centeredtext(draw, (5, ypos), item['label'])
             
-            offset = self.text(draw, (11, ypos), item['destination'])
+            offset = self.text(draw, (11, ypos), item['destination'], self.textColor)
               
             self.rightaligntext(draw, (image.width+1, ypos), 
-              "{}min".format(item['departureTimeMinutes']), bg=(0,0,0))
+              "{}min".format(item['departureTimeMinutes']), 
+              self.textColor, bg=(0,0,0))
             
             # lass ich weg, ist in departureTimeMinutes schon einberechnet
             #if item['delay']>-1:
