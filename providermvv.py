@@ -19,14 +19,18 @@ class ProviderMVV(Provider):
         self.font = ImageFont.truetype("fonts/Berkelium1541.ttf", size=6)
         self.textColor = (150,150,20)
         self.titleColor = (100,200,200)
+        self.imageFuncs = [
+            self.createImage1,
+            self.createImage2,
+            self.createImage3,
+            self.createImage4
+            ]
 
     def displayContent(self, t) -> None:
-        image = self.createImage1()
-        self.matrix.displayImage(image)
-        time.sleep(t)
-        image = self.createImage2()
-        self.matrix.displayImage(image)
-        time.sleep(t)
+        for x in self.imageFuncs:
+            image = x()
+            self.matrix.displayImage(image)
+            time.sleep(t)
         
     def createImage1(self) -> Image:
         image = self.createImageFor('de:09162:1150', "ABFAHRTEN Heimeranplatz", 
@@ -39,6 +43,16 @@ class ProviderMVV(Provider):
           lambda x: x['departureTimeMinutes'] >= 5 and x['label'].startswith("S"))
         return image
 
+    def createImage3(self) -> Image:
+        image = self.createImageFor('de:09162:102', "ABFAHRTEN Gollierplatz", 
+          lambda x: x['departureTimeMinutes'] >= 1 )
+        return image
+        
+    def createImage4(self) -> Image:
+        image = self.createImageFor('de:09162:65', "ABFAHRTEN Trappentreustr",
+          lambda x: x['departureTimeMinutes'] >= 1)
+        return image
+        
     def createImageFor(self, station, title, labelFilter) -> Image:
         image = Image.new('RGB', self.matrix.getSize(), (0,0,0))
         draw = ImageDraw.Draw(image)
@@ -97,7 +111,8 @@ class ProviderMVV(Provider):
           
         
     def saveTestImage(self) -> None:
-        image = self.createImage1()
-        image.save("mvv1.png", "PNG")
-        image = self.createImage2()
-        image.save("mvv2.png", "PNG")
+        index=1
+        for x in self.imageFuncs:
+          image = x()
+          image.save(f"mvv{index}.png", "PNG")
+          index = index+1
