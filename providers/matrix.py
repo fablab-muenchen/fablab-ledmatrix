@@ -4,7 +4,7 @@ import socket
 import time
 from PIL import Image
 
-UDP_IP = "rgbmatrix.local"
+UDP_IP = "10.100.198.159" #"rgbmatrix.local"
 UDP_PORT = 9998
 SIZE = (96,64)
 
@@ -36,3 +36,6 @@ class Matrix:
     
     def getSize(self):
         return SIZE
+
+    def getCenter(self):
+        return (round(SIZE[0]/2),round(SIZE[1]/2))

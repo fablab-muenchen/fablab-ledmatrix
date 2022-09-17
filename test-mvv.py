@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 
-
-from matrix import Matrix
-from providermvv import ProviderMVV
+from providers import MVVProvider, Matrix
 
 
 m = Matrix()
-mvv = ProviderMVV(m)
+mvv = MVVProvider(
+        matrix=m,
+        station='de:09162:8',
+        title="ABFAHRTEN Donnersb.Brücke",
+        station_filter=lambda x: x['departureTimeMinutes'] >= 5 and x['label'].startswith("S")
+        )
 mvv.saveTestImage()
 
 
