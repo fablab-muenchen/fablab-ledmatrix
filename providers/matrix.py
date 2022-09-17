@@ -4,7 +4,7 @@ import socket
 import time
 from PIL import Image
 
-UDP_IP = "10.100.198.159" #"rgbmatrix.local"
+UDP_IP = "rgbmatrix.local"
 UDP_PORT = 9998
 SIZE = (96,64)
 
