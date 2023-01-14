@@ -1,4 +1,4 @@
-This project was created, to redo the iformation panel in the Fablab Munich.
+This project was created, to redo the LED matrix information panel at Fablab Munich.
 
 ## Panel Facts
 
