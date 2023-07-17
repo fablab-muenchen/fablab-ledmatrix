@@ -67,7 +67,7 @@ class MVVProvider(TextProvider):
             # line
             #color = color_hex2triplet(item['lineBackgroundColor'])
             #color = color_mult(color, 0.75)
-            color = (100,100,100)
+            color = (70,70,70)
             draw.rectangle([0,ypos, 9,ypos+4], fill=color)
             super().centeredtext(draw, (5, ypos), item['line'])
             
