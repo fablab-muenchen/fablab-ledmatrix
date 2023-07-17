@@ -1,4 +1,4 @@
 mss==6.1.0
-mvg-api==1.2.7
+mvg==1.0.2
 numpy==1.23.3
 Pillow==9.2.0
