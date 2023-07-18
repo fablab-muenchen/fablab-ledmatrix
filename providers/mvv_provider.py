@@ -62,12 +62,21 @@ class MVVProvider(TextProvider):
         
 
         for item in filter(lambda x: labelFilter(x), dep): 
-            #print(item)         
-            
-            # line
-            #color = color_hex2triplet(item['lineBackgroundColor'])
-            #color = color_mult(color, 0.75)
-            color = (70,70,70)
+
+            # line 
+            color_dict = {"U1": (60, 115, 51), "U2": (195, 2, 45), "U3": (237, 103, 32), "U4": (0, 171, 133),
+                          "U5": (189, 123, 0), "U6": (0, 101, 176),
+                          "S1": (22, 192, 233), "S2": (113, 191, 68), "S3": (123, 16, 125), "S4": (238, 28, 37),
+                          "S6": (0, 138, 81), "S7": (150, 56, 51), "S8": (60, 60, 60), "S20": (240, 95, 119),
+                          "153": (0, 95, 95), "53": (255, 95, 0), "63": (255, 95, 0), "N43": (0, 60, 60),
+                          "N44": (0, 60, 60),
+                          "18": (32, 177, 74), "19": (239, 43, 52), "29": (239, 43, 52), "N19": (216, 32, 32)
+                          }
+            try:
+                color = color_dict[item["line"]]
+            except KeyError:
+                color = (70, 70, 70)
+                
             draw.rectangle([0,ypos, 9,ypos+4], fill=color)
             super().centeredtext(draw, (5, ypos), item['line'])
             
