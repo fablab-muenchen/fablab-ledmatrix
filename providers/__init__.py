@@ -1,4 +1,3 @@
-import imp
 from .default_provider import DefaultProvider
 from .mvv_provider import MVVProvider
 from .screen_provider import ScreenProvider

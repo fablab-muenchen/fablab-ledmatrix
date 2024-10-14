@@ -1,4 +1,4 @@
-mss==6.1.0
-mvg==1.0.2
-numpy==1.23.3
-Pillow==9.2.0
+mss==9.0.2
+numpy==2.1.2
+Pillow==10.4.0
+requests==2.32.3
