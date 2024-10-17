@@ -113,7 +113,7 @@ class MvvgApi:
             "limit": limit,
             "transportTypes": str.join(',', transport_types),
         }
-        result = requests.get("https://mvg.de/api/fib/v2/departure", params=params)
+        result = requests.get("https://mvg.de/api/bgw-pt/v3/departures", params=params)
 
         json = result.json()
         return json
