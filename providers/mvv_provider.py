@@ -111,9 +111,12 @@ class MvvgApi:
         params = {
             "globalId": self.station,
             "limit": limit,
-            "transportTypes": str.join(',', transport_types),
         }
+
         result = requests.get("https://mvg.de/api/bgw-pt/v3/departures", params=params)
 
         json = result.json()
-        return json
+
+        departures = [x for x in json if x["transportType"] in transport_types]
+
+        return departures
